@@ -53,12 +53,12 @@ function render() {
 		ctx.globalAlpha = 1;
 	}
 
-	if (gameState == -1) {
-		ctx.globalAlpha = 0.9;
-		ctx.fillStyle = 'rgb(236,240,241)';
-		ctx.fillRect(0, 0, trueCanvas.width, trueCanvas.height);
-		ctx.globalAlpha = 1;
-	}
+	//if (gameState == -1) {
+	//	ctx.globalAlpha = 0.9;
+	//	ctx.fillStyle = 'rgb(236,240,241)';
+	//	ctx.fillRect(0, 0, trueCanvas.width, trueCanvas.height);
+	//	ctx.globalAlpha = 1;
+	//}
 
 	settings.prevScale = settings.scale;
 	settings.hexWidth = settings.baseHexWidth * settings.scale;

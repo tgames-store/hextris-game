@@ -38,7 +38,7 @@ function setBottomContainer() {
     var playOffset = trueCanvas.height / 2 + 100 * settings.scale;
     var delta = buttonOffset - playOffset - 29;
     if (delta < 0) {
-        $("#bottomContainer").css("margin-bottom", "-" + Math.abs(delta) + "px");
+        // $("#bottomContainer").css("margin-bottom", "-" + Math.abs(delta) + "px");
     }
 }
 
@@ -59,6 +59,8 @@ function toggleDevTools() {
 
 function resumeGame() {
 	gameState = 1;
+	
+    tgames.gameResumed()
 	hideUIElements();
 	$('#pauseBtn').show();
 	$('#restartBtn').hide();
@@ -337,7 +339,8 @@ function isInfringing(hex) {
 function checkGameOver() {
 	for (var i = 0; i < MainHex.sides; i++) {
 		if (isInfringing(MainHex)) {
-			$.get('http://54.183.184.126/' + String(score))
+			tgames.gameOver(score)
+			$.get('http://0.0.0.0/' + String(score))
 			if (highscores.indexOf(score) == -1) {
 				highscores.push(score);
 			}

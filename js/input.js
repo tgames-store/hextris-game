@@ -151,34 +151,42 @@ function addKeyListeners() {
 
 
 	if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-			$("#restart").on('touchstart', function() {
+		$("#restart").on('touchstart', function() {
+			tgames.gameStarted()
 			init();
 			canRestart = false;
 			$("#gameoverscreen").fadeOut();
+			$('.pause-blur').css("opacity", "0")
 		});
 
 	}
 	else {
 		$("#restart").on('mousedown', function() {
+			tgames.gameStarted()
 			init();
 			canRestart = false;
 			$("#gameoverscreen").fadeOut();
+			$('.pause-blur').css("opacity", "0")
 		});
 
 	}
 	if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-			$("#restartBtn").on('touchstart', function() {
+		$("#restartBtn").on('touchstart', function() {
+			tgames.gameStarted()
 			init(1);
 			canRestart = false;
 			$("#gameoverscreen").fadeOut();
+			$('.pause-blur').css("opacity", "0")
 		});
 
 	}
 	else {
 		$("#restartBtn").on('mousedown', function() {
+			tgames.gameStarted()
 			init(1);
 			canRestart = false;
 			$("#gameoverscreen").fadeOut();
+			$('.pause-blur').css("opacity", "0")
 		});
 
 

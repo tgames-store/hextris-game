@@ -18,8 +18,13 @@ function renderText(x, y, fontSize, color, text, font) {
 }
 
 function drawScoreboard() {
-	if (scoreOpacity < 1) {
-		scoreOpacity += 0.01;
+	if (scoreOpacity < 1 && gameState != 0) {
+		scoreOpacity += 0.05;
+	}
+	if  (scoreOpacity > 1) {
+		scoreOpacity = 1;
+	}
+	if (textOpacity < 1 && gameState === 0) {
 		textOpacity += 0.01;
 	}
 	ctx.globalAlpha = textOpacity;
@@ -51,7 +56,7 @@ function drawScoreboard() {
 		ctx.globalAlpha = scoreOpacity;
 		renderText(trueCanvas.width / 2 + gdx, trueCanvas.height / 2 + gdy, scoreSize, color, score);
 	} else {
-		ctx.globalAlpha = scoreOpacity;
+		ctx.globalAlpha = 1;
 		renderText(trueCanvas.width / 2 + gdx, trueCanvas.height / 2 + gdy, scoreSize, color, score);
 	}
 
@@ -185,6 +190,7 @@ function pause(o) {
 
 	var c = document.getElementById("canvas");
 	if (gameState == -1) {
+		tgames.gameResumed()
 		$('#fork-ribbon').fadeOut(300, 'linear');
 		$('#restartBtn').fadeOut(300, "linear");
 		$('#buttonCont').fadeOut(300, "linear");
@@ -195,12 +201,14 @@ function pause(o) {
 		$("#pauseBtn").attr("src", "./images/btn_pause.svg");
 		$('.helpText').fadeOut(300, 'linear');
 		$('#overlay').fadeOut(300, 'linear');
+		$('.pause-blur').css("opacity", "0")
 		hideText();
 		setTimeout(function() {
 			gameState = prevGameState;
 			pausable =true;
 		}, 400);
 	} else if (gameState != -2 && gameState !== 0 && gameState !== 2) {
+		tgames.gamePaused()
 		$('#restartBtn').fadeIn(300, "linear");
 		$('#buttonCont').fadeIn(300, "linear");
 		$('.helpText').fadeIn(300, 'linear');
@@ -210,6 +218,7 @@ function pause(o) {
 		$('#fork-ribbon').fadeIn(300, 'linear');
 		$("#pauseBtn").attr("src","./images/btn_resume.svg");
 		$('#overlay').fadeIn(300, 'linear');
+		$('.pause-blur').css("opacity", "1")
 		prevGameState = gameState;
 		setTimeout(function() {
 		    pausable = true;
