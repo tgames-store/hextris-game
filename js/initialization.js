@@ -66,7 +66,9 @@ function initialize(a) {
 			speedModifier: 0.73,
 			speedUpKeyHeld: false,
 			creationSpeedModifier: 0.73,
-			comboTime: 310
+			comboTime: 310,
+			continueGame: true,
+			timer: null
 		};
 	} else {
 		settings = {
@@ -85,7 +87,8 @@ function initialize(a) {
 			speedModifier: 0.65,
 			speedUpKeyHeld: false,
 			creationSpeedModifier: 0.65,
-			comboTime: 310
+			comboTime: 310,
+			continueGame: true
 		};
 
 	}
@@ -151,6 +154,7 @@ function initialize(a) {
 		document.addEventListener('touchmove', function(e) {
 			e.preventDefault();
 		}, false);
+
 		$(window).resize(scaleCanvas);
 		$(window).unload(function() {
 

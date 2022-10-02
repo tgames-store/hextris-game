@@ -68,7 +68,7 @@ function waveGen(hex) {
 		if (this.difficulty < 13) {
 			var increment;
 			if (this.difficulty < 8) {
-				 increment = (this.dt - this.last) / (5166667) * settings.speedModifier;
+				increment = (this.dt - this.last) / (5166667) * settings.speedModifier;
 			} else if (this.difficulty < 15) {
 				increment = (this.dt - this.last) / (72333333) * settings.speedModifier;
 			} else {

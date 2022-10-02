@@ -147,23 +147,55 @@ function hideText() {
 }
 
 function gameOverDisplay() {
-	settings.ending_block=false;
+	settings.ending_block = false;
+
 	Cookies.set("visited",true);
 	var c = document.getElementById("canvas");
 	c.className = "blur";
+
 	updateHighScores();
+
+	if (highscores.length === 0 ){
+		$("#currentHighScore").text(0);
+	}
+	else {
+		$("#currentHighScore").text(highscores[0]);
+	}
+
+	$("#gameoverscreen").fadeIn();
+	$("#buttonCont").fadeIn();
+	$("#container").fadeIn();
+	$("#socialShare").fadeIn();
+	$("#restart").fadeIn();
+
+    set_score_pos();
+}
+
+function continueGameDisplay() {
+	settings.continueGame = false;
+	settings.ending_block = false;
+
+	Cookies.set("visited",true);
+	updateHighScores();
+
 	if (highscores.length === 0 ){
 		$("#currentHighScore").text(0);
 	}
 	else {
 		$("#currentHighScore").text(highscores[0])
 	}
-	$("#gameoverscreen").fadeIn();
+
+	settings.timer = setTimeout(skipAds,12000);
+
+	$('.pause-blur').css("opacity", "1");
+	$("#continuescreen").fadeIn();
 	$("#buttonCont").fadeIn();
-	$("#container").fadeIn();
-	$("#socialShare").fadeIn();
-	$("#restart").fadeIn();
-    set_score_pos();
+	$("#offer").fadeIn();
+	$("#watch-ads").fadeIn();
+	$("#skip").fadeIn();
+	$("#line-timeout").fadeIn();
+
+	set_score_pos();
 }
 
 function updateHighScores (){

@@ -88,8 +88,7 @@ function Block(fallingLane, color, iter, distFromHex, settled) {
 		if (Math.abs(this.angle - this.targetAngle + this.angularVelocity) <= Math.abs(this.angularVelocity)) { //do better soon
 			this.angle = this.targetAngle;
 			this.angularVelocity = 0;
-		}
-		else {
+		} else {
 			this.angle += this.angularVelocity;
 		}
 		

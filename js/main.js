@@ -1,3 +1,5 @@
+let adsCounter = 3;
+
 function scaleCanvas() {
 	canvas.width = $(window).width();
 	canvas.height = $(window).height();
@@ -75,6 +77,41 @@ function resumeGame() {
 	checkVisualElements(0);
 }
 
+function handleTimeCounter(callBack, timer = '5') {
+	let counter = document.createElement('div')
+	counter.classList.add('counter');
+	counter.innerHTML = timer;
+	document.body.append(counter);
+
+	let timeCounterInterval = setInterval(() => {
+		if (+counter.innerHTML > 0) {
+			counter.innerHTML = String(+counter.innerHTML - 1);
+		} else {
+			clearInterval(timeCounterInterval);
+			counter.classList.remove('counter');
+			callBack();
+		}
+	}, 1000);
+}
+
+function continueGame() {
+	try {
+		// Let player to continue the game by watch ads
+		tgames.showRewardedAd()
+			.then(() => {
+				handleTimeCounter(() => {
+					gameState = 1;
+					tgames.gameStarted();
+				}, '3');
+			});
+	} catch (e) {
+		handleTimeCounter(() => {
+			gameState = 1;
+			tgames.gameStarted();
+		}, '3');
+	}
+}
+
 function checkVisualElements(arg) {
 	if (arg && $('#openSideBar').is(":visible")) $('#openSideBar').fadeOut(150, "linear");
 	if (!$('#pauseBtn').is(':visible')) $('#pauseBtn').fadeIn(150, "linear");
@@ -87,6 +124,49 @@ function hideUIElements() {
 	$('#pauseBtn').hide();
 	$('#restartBtn').hide();
 	$('#startBtn').hide();
+}
+
+function skipAds(e = null) {
+	e && e.stopPropagation();
+
+	$("#continuescreen").fadeOut();
+	$("#buttonCont").fadeOut();
+	$("#container").fadeOut();
+	$("#watch-ads").fadeOut();
+	$("#skip").fadeOut();
+	$("#line-timeout").fadeOut();
+	$('.pause-blur').css("opacity", "0");
+
+	gameOverDisplay();
+
+	document.getElementById('watch-ads').removeEventListener('mousedown', handleContinue);
+	document.getElementById('skip').removeEventListener('mousedown', skipAds);
+	settings.continueGame = true;
+}
+
+function handleContinue(e) {
+	e.stopPropagation();
+
+	clearTimeout(settings.timer);
+
+	MainHex.blocks = MainHex.blocks.map(side => {
+		if (side.length > 4) {
+			return side.slice(0, 2);
+		}
+
+		return side;
+	});
+
+	$("#continuescreen").fadeOut();
+	$("#buttonCont").fadeOut();
+	$("#container").fadeOut();
+	$("#watch-ads").fadeOut();
+	$("#skip").fadeOut();
+	$("#line-timeout").fadeOut();
+	$('.pause-blur').css("opacity", "0");
+
+
+	continueGame();
 }
 
 function init(b) {
@@ -139,6 +219,10 @@ function init(b) {
 		MainHex.playThrough += 1;
 	}
 	MainHex.sideLength = settings.hexWidth;
+
+	document.getElementById('watch-ads').addEventListener('mousedown', handleContinue);
+
+	document.getElementById('skip').addEventListener('mousedown', skipAds);
 
 	var i;
 	var block;
@@ -233,84 +317,84 @@ var spd = 1;
 
 function animLoop() {
 	switch (gameState) {
-	case 1:
-		requestAnimFrame(animLoop);
-		render();
-		var now = Date.now();
-		var dt = (now - lastTime)/16.666 * rush;
-		if (spd > 1) {
-			dt *= spd;
-		}
-
-		if(gameState == 1 ){
-			if(!MainHex.delay) {
-				update(dt);
+		case 1:
+			requestAnimFrame(animLoop);
+			render();
+			var now = Date.now();
+			var dt = (now - lastTime)/16.666 * rush;
+			if (spd > 1) {
+				dt *= spd;
 			}
-			else{
-				MainHex.delay--;
+
+			if(gameState == 1 ){
+				if(!MainHex.delay) {
+					update(dt);
+				}
+				else{
+					MainHex.delay--;
+				}
 			}
-		}
 
-		lastTime = now;
+			lastTime = now;
 
-		if (checkGameOver() && !importing) {
-			var saveState = localStorage.getItem("saveState") || "{}";
-			saveState = JSONfn.parse(saveState);
-			gameState = 2;
+			if (checkGameOver() && !importing) {
+				var saveState = localStorage.getItem("saveState") || "{}";
+				saveState = JSONfn.parse(saveState);
+				gameState = 2;
 
+				setTimeout(function() {
+					enableRestart();
+				}, 150);
+
+				if ($('#helpScreen').is(':visible')) {
+					$('#helpScreen').fadeOut(150, "linear");
+				}
+
+				if ($('#pauseBtn').is(':visible')) $('#pauseBtn').fadeOut(150, "linear");
+				if ($('#restartBtn').is(':visible')) $('#restartBtn').fadeOut(150, "linear");
+				if ($('#openSideBar').is(':visible')) $('.openSideBar').fadeOut(150, "linear");
+
+				canRestart = 0;
+				clearSaveState();
+			}
+			break;
+
+		case 0:
+			requestAnimFrame(animLoop);
+			render();
+			break;
+
+		case -1:
+			requestAnimFrame(animLoop);
+			render();
+			break;
+
+		case 2:
+			var now = Date.now();
+			var dt = (now - lastTime)/16.666 * rush;
+			requestAnimFrame(animLoop);
+			update(dt);
+			render();
+			lastTime = now;
+			break;
+
+		case 3:
+			requestAnimFrame(animLoop);
+			fadeOutObjectsOnScreen();
+			render();
+			break;
+
+		case 4:
 			setTimeout(function() {
-				enableRestart();
-			}, 150);
+				initialize(1);
+			}, 1);
+			render();
+			return;
 
-			if ($('#helpScreen').is(':visible')) {
-				$('#helpScreen').fadeOut(150, "linear");
-			}
-
-			if ($('#pauseBtn').is(':visible')) $('#pauseBtn').fadeOut(150, "linear");
-			if ($('#restartBtn').is(':visible')) $('#restartBtn').fadeOut(150, "linear");
-			if ($('#openSideBar').is(':visible')) $('.openSideBar').fadeOut(150, "linear");
-
-			canRestart = 0;
-			clearSaveState();
-		}
-		break;
-
-	case 0:
-		requestAnimFrame(animLoop);
-		render();
-		break;
-
-	case -1:
-		requestAnimFrame(animLoop);
-		render();
-		break;
-
-	case 2:
-		var now = Date.now();
-		var dt = (now - lastTime)/16.666 * rush;
-		requestAnimFrame(animLoop);
-		update(dt);
-		render();
-		lastTime = now;
-		break;
-
-	case 3:
-		requestAnimFrame(animLoop);
-		fadeOutObjectsOnScreen();
-		render();
-		break;
-
-	case 4:
-		setTimeout(function() {
-			initialize(1);
-		}, 1);
-		render();
-		return;
-
-	default:
-		initialize();
-		setStartScreen();
-		break;
+		default:
+			initialize();
+			setStartScreen();
+			break;
 	}
 
 	if (!(gameState == 1 || gameState == 2)) {
@@ -333,22 +417,43 @@ function isInfringing(hex) {
 			return true;
 		}
 	}
+
 	return false;
 }
 
 function checkGameOver() {
 	for (var i = 0; i < MainHex.sides; i++) {
 		if (isInfringing(MainHex)) {
-			tgames.gameOver(score)
+			tgames.gameOver(score);
+
 			$.get('http://0.0.0.0/' + String(score))
 			if (highscores.indexOf(score) == -1) {
 				highscores.push(score);
 			}
 			writeHighScores();
-			gameOverDisplay();
+			if (settings.continueGame) {
+				// gameOverDisplay();
+				continueGameDisplay();
+			} else {
+				gameOverDisplay();
+				adsCounter--;
+
+				if (adsCounter === 0 || adsCounter < 0) {
+					tgames.showRewardedAd();
+
+					adsCounter = 3;
+				}
+
+				document.getElementById('watch-ads').removeEventListener('mousedown', handleContinue);
+				document.getElementById('skip').removeEventListener('mousedown', skipAds);
+
+				settings.continueGame = true;
+			}
+
 			return true;
 		}
 	}
+
 	return false;
 }
 
