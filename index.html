@@ -13,13 +13,10 @@
 		<link rel="apple-touch-icon" sizes="180x180" href="images/icons/apple-touch-180.png">
 		<link rel="apple-touch-icon" sizes="512x512" href="images/icons/apple-touch-512.png">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, minimal-ui"/>
-		<meta property="og:url" content="http://hextris.github.io/hextris/"/>
 		<meta property="og:site_name" content="Hextris"/>
 		<meta property="og:title" content="Hextris"/>
 		<meta property="og:description" content="An addictive puzzle game inspired by Tetris."/>
 		<meta property="og:type" content="website"/>
-		<meta property="og:author" content="https://www.facebook.com/hextris"/>
-		<meta property="og:image" content="http://hextris.github.io/hextris/images/facebook-opengraph.png"/>
 		<meta property="og:image:width" content="1200"/>
 		<meta property="og:image:height" content="630"/>
 		<link rel="icon" type="image/png" href="favicon.ico">
@@ -46,7 +43,623 @@
 		<script type='text/javascript' src="js/main.js"></script>
 		<script type='text/javascript' src="js/initialization.js"></script>
 		<script src="vendor/sweet-alert.min.js"></script>
-		
+		<style>
+			@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@200;400;600&display=swap');
+
+			* {
+				-webkit-touch-callout:none;
+				-webkit-user-select:none;
+				-khtml-user-select:none;
+				-moz-user-select:none;
+				-ms-user-select:none;
+				user-select:none;
+				padding:0;
+				margin:0;
+				-webkit-tap-highlight-color:rgba(0,0,0,0);
+			}
+			#HIGHSCORE {
+				position:absolute;
+				left:50%;
+				width:250px;
+				overflow:visible;
+				margin-left:-175px;
+				font-family: 'Exo 2', sans-serif;
+
+			}
+			#container {
+				color:#232323;
+				position:absolute;
+				left:50%;
+				top:calc(50%);
+				text-align:center;
+				transform:translate(-50%, -50%);
+				font-family: 'Exo 2', sans-serif;
+				-webkit-transform:translate(-50%, -50%);
+				-moz-transform:translate(-50%, -50%);
+				-ms-transform:translate(-50%, -50%);
+				display:none;
+			}
+			.tweet {
+				font-size:2rem;
+				color:#4099FF;
+			}
+			@media only screen and (min-device-width:320px) and (max-device-width:480px) {
+				.tweet{
+					font-size:1rem;
+				}
+			}
+			a {
+				color:#232323;
+			}
+			.navbar {
+				width:80%;
+				margin:0 auto;
+				padding:2.5vmin 0;
+				text-align:center;
+			}
+			.navbar li {
+				display:inline-block;
+				text-align:center;
+				width:calc(33% - 1.25vmin);
+			}
+
+			#title {
+				color:#ecf0f1;
+				font-size:6vmin;
+			}
+
+			#score {
+				font-size:4vmin;
+				text-align:center;
+				width:30%;
+			}
+
+			#highscores {
+				text-align:center;
+				list-style:none;
+			}
+
+			.not-visible {
+				display:none;
+			}
+
+			button {
+				color:#ecf0f1;
+				background-color:rgba(0,0,0,0);
+				border:0;
+			}
+
+			button:focus {
+				outline:0;
+			}
+
+			#openSideBar {
+				position:fixed;
+				margin-top:6px;
+				width:72px;
+				height:72px;
+				margin-left:11px;
+				z-index:3003;
+				color:#232323;
+				cursor:pointer;
+				top:0;
+				left:0;
+
+			}
+
+
+			#pauseBtn {
+				display:none;
+				position:fixed;
+				margin-bottom:7px;
+				width:72px;
+				height:72px;
+				margin-right:11px;
+				z-index:3000;
+				color:#232323;
+				cursor:pointer;
+				right:0;
+				bottom:0;
+				z-index:99;
+			}
+
+			#restartBtn {
+				display:none;
+				position:fixed;
+				margin-bottom:7px;
+				width:72px;
+				height:72px;
+				margin-left:11px;
+				z-index:3000;
+				color:#232323;
+				cursor:pointer;
+				bottom:0;
+				z-index:99;
+			}
+			#startBtn {
+				position:absolute;
+				left:40%;
+				top:38%;
+				height:25%;
+				width:25%;
+				z-index:99999999;
+				cursor:pointer;
+			}
+
+			#helpScreen {
+				height:100%;
+				width:100%;
+				z-index:3001;
+				position:fixed;
+				top:0;
+				margin:0;
+				font-size:15px;
+				text-align:center;
+				display:none;
+				color:#232323;
+				background-color:rgba(236,240,241,1);
+			}
+
+			#colorBlindBtn {
+				position:absolute;
+				width:120px;
+				height:20px;
+				z-index:9999;
+				left:47%;
+				top:65%;
+				font-size:15px;
+				text-align:center;
+				color:#232323;
+				cursor:pointer;
+			}
+
+			#inst_main_body {
+				padding:0px;
+				font-size:1.2em;
+				left:50%;
+				top:50%;
+				position: absolute;
+				text-align:left;
+				max-width:400px;
+				/*margin-top:30px;*/
+				transform:translate(-50%, -50%);
+				-webkit-transform:translate(-50%, -50%);
+				-moz-transform:translate(-50%, -50%);
+				-ms-transform:translate(-50%, -50%);
+			}
+
+			#inst_main_body > a {
+				font-weight:bold;
+			}
+
+			#inst_main_body > hr {
+				width:100%;
+				color:#232323;
+				background-color:#232323;
+				height:1px;
+				border:0;
+			}
+
+			#inst_main_body > p {
+				margin-bottom:15px;
+			}
+
+			#instructions_head {
+				text-align:center;
+				font-size:1.5em;
+				padding-bottom:4px;
+			}
+
+
+			#highScoreInGameTextHeader {
+				color: #bdc3c7;
+				width:100%;
+			}
+
+			#highScoreInGameText {
+				position: absolute;
+				top:10px;
+				text-align: center;
+				width:200px;
+				left:50%;
+				margin-left:-100px;
+			}
+
+			#currentHighScore {
+				color: #2c3e50;
+				width:100%;
+				margin-top: -5px;
+				font-size:2em;
+			}
+
+			@media only screen and (max-device-width:480px) {
+				#helpScreen {
+					position:fixed;
+					top:2px;
+					padding-top:20px;
+					margin:0;
+					width:100%;
+					height:100%;
+					font-size:13px;
+					text-align:center;
+				}
+				#inst_main_body {
+					width:calc(100% - 70px);
+					transform:translate(-50%, -50%);
+					-webkit-transform:translate(-50%, -50%);
+					-moz-transform:translate(-50%, -50%);
+					-ms-transform:translate(-50%, -50%);
+				}
+				#instructions_head {
+					padding-left:0%;
+				}
+				#openSideBar{
+					width:60px;
+					height:60px;
+				}
+				#pauseBtn {
+					width:60px;
+					height:60px;
+				}
+				#restartBtn {
+					width:60px;
+					height:60px;
+				}
+			}
+
+			.pause-blur{
+				opacity: 0;
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background-color: #ecf0f1c0;
+				transition: all 0.3s ease;
+			}
+
+			.overlay {
+				position:absolute;
+				height:20%;
+				width:100%;
+				left:50%;
+				top:50%;
+				margin-left:-50%;
+				margin-top:-10%;
+				z-index:3000;
+				color:#232323;
+				text-align:center;
+			}
+
+			.helpText {
+				z-index:3001;
+			}
+
+			.centeredHeader {
+				font-size:5vw;
+				text-align:center;
+				line-height:4rem;
+			}
+
+			.centeredSubHeader {
+				font-size:2.2rem;
+				line-height:1em;
+				text-align:center;
+			}
+
+			.centeredSubSubHeader {
+				font-size:1.4rem;
+				text-align:center;
+			}
+
+			#buttonCont {
+				position:absolute;
+				left:50%;
+				width:310px;
+				margin-left:-8px;
+				transform:translate(-50%, 0%);
+				-webkit-transform:translate(-50%, 0%);
+				-moz-transform:translate(-50%, 0%);
+				-ms-transform:translate(-50%, 0%);
+			}
+
+			#continue-svg {
+				position: absolute;
+				z-index: -5;
+			}
+
+			#min-btn {
+				width: 50px;
+				height: 50px;
+				background: #2b2b2b;
+				position: absolute;
+				z-index: 5;
+				top: 100px;
+				left: 100px;
+			}
+
+			@media only screen and (orientation:landscape) {
+				#buttonCont {
+					bottom:calc(50vh - 19vh - 36px);
+				}
+				#container {
+					top:calc(50vh - 11vh);
+				}
+			}
+
+			@media only screen and (orientation:portrait) {
+				#buttonCont {
+					bottom:calc(50vh - 19vw - 36px);
+				}
+				#container {
+					top:calc(50vh - 11vw);
+				}
+			}
+
+			@media only screen and (min-device-width:320px) and (max-device-width:600px) {
+				.centeredHeader {
+					font-size:2rem;
+					text-align:center;
+					line-height:0.6rem;
+				}
+
+				.centeredSubHeader {
+					font-size:1rem;
+					text-align:center;
+				}
+
+				.overlay {
+					margin-top:-20%;
+				}
+
+				#buttonCont {
+					width:280px;
+				}
+
+				@media only screen and (orientation:landscape) {
+					#buttonCont {
+						bottom:119px;
+					}
+				}
+
+				@media only screen and (orientation:portrait) {
+					#buttonCont {
+						bottom:119px;
+					}
+				}
+			}
+			.blur {
+				opacity:0.1;
+			}
+
+			* {
+				padding:0;
+				margin:0;
+			}
+
+			body {
+				color:#ecf0f1;
+				font-family:'Exo', sans-serif;
+				background-color:#ecf0f1;
+			}
+
+			#clickToExit {
+				cursor:pointer;
+			}
+
+			#canvas {
+				transition:all 0.5s ease, width 0, height 0;
+				position:absolute;
+				left:0;
+				right:0;
+				height:100%;
+				width:100%;
+				background-color:#ecf0f1;
+				z-index:0;
+			}
+			#title {
+				z-index:99;
+				margin-top:20px;
+				color:#2c3e50;
+			}
+
+			#gameoverscreen {
+				/*display:none;*/
+			}
+
+			#restart{
+				display:none;
+				cursor:pointer !important;
+				margin:0;
+				padding:0;
+				bottom:15px;
+				position:absolute;
+				left:calc(50% - 124px);
+				transform:translate(-50%, 0%);
+				-webkit-transform:translate(-50%, 0%);
+				-moz-transform:translate(-50%, 0%);
+				-ms-transform:translate(-50%, 0%);
+				margin-bottom:-3.5px;
+			}
+
+			.counter {
+				width: 100vw;
+				height: 100vh;
+				font-size: 64px;
+				padding-top: 50vh;
+				align-items: center;
+				position: absolute;
+				background-color: #ecf0f1c0;
+				top: 0;
+				z-index: 20;
+				font-family: 'Inter';
+				color: #FFFFFF;
+				text-align: center;
+			}
+
+			#line-timeout {
+				display: none;
+				position: absolute;
+				z-index: 5;
+				width: 0;
+				background-color: #d35400;
+				height: 20px;
+				transform: translate(-50%, -50%);
+				bottom: 45%;
+				left: 50%;
+				animation: timer 12s ease-in-out;
+			}
+
+			#socialShare,
+			#watch-ads,
+			#skip {
+				display:none;
+				position: relative;
+				margin:0;
+				padding:0;
+				bottom:0;
+				margin-bottom: 6.5px;
+				position:absolute;
+				left:calc(50% + 30px);
+				transform: translate(-50%, 0%);
+				-webkit-transform:translate(-50%, 0%);
+				-moz-transform:translate(-50%, 0%);
+				-ms-transform:translate(-50%, 0%);
+				padding-bottom: 2px;
+			}
+
+			#watch-ads {
+				width: 224px;
+				height: 57px;
+				bottom: 35%;
+				transform: translateX(-60%);
+			}
+
+			#skip {
+				width: 224px;
+				height: 57px;
+				bottom: 25%;
+				transform: translateX(-60%);
+			}
+
+			.middle {
+				position: absolute;
+				transform: translate(-50%, -50%);
+				top: 50%;
+				left: 50%;
+				text-align: center;
+			}
+
+			.unselectable {
+				-webkit-touch-callout:none;
+				-webkit-user-select:none;
+				-khtml-user-select:none;
+				-moz-user-select:none;
+				-ms-user-select:none;
+				user-select:none;
+			}
+			#afterhr {
+				margin:0;
+				padding:0;
+				margin-bottom:-10px;
+				padding-bottom:-10px;
+			}
+			body {
+				overflow:hidden;
+			}
+			#gameoverscreen {
+				padding:8px;
+			}
+			/*@font-face {*/
+			/*	font-family: 'Exo 2', sans-serif;*/
+			/*	font-weight:light;*/
+			/*	src:url("./fonts/Exo2-ExtraLight.otf") format("opentype");*/
+			/*}*/
+
+			/*@font-face {*/
+			/*	font-family:Exo;*/
+			/*	src:url("./fonts/Exo2-Regular.otf") format("opentype");*/
+			/*}*/
+
+			/*@font-face {*/
+			/*	font-family:Exo;*/
+			/*	font-weight:bold;*/
+			/*	src:url("./fonts/Exo2-SemiBold.otf") format("opentype");*/
+			/*}*/
+
+			.GOTitle {
+				font-weight:bold;
+				font-size:24.2000px;
+			}
+
+			.scoreNum {
+				font-weight:normal ! important;
+			}
+
+			#cScore {
+				font-size:60.5000px;
+				font-weight:light;
+				margin-bottom:5px;
+				margin-top:-10px;
+			}
+
+			#highScoresTitle {
+				margin-bottom:2px;
+			}
+
+			.score {
+				font-weight:light;
+				line-height:18px;
+			}
+
+
+
+
+			#bottomContainer {
+				position:absolute;
+				width:100%;
+				bottom:0px;
+			}
+
+			#androidBadge {
+				position:absolute;
+				height:41px;
+				margin-top:5px;
+				left:calc(50% - 66px);
+				transform:translate(calc(-50% - 4px), -1px);
+				-webkit-transform:translate(calc(-50% - 4px), -1px);
+				-moz-transform:translate(calc(-50% - 4px), -1px);
+				-ms-transform:translate(calc(-50% - 4px), -1px);
+			}
+
+			#iOSBadge {
+				margin-top:5px;
+				position:absolute;
+				left:calc(50% + 65px);
+				transform:translate(calc(-50% - 4px), 0%);
+				-webkit-transform:translate(calc(-50% - 4px), 0%);
+				-moz-transform:translate(calc(-50% - 4px), 0%);
+				-ms-transform:translate(calc(-50% - 4px), 0%);
+			}
+
+			#authors {
+				position:absolute;
+				width:200px;
+				bottom:0px;
+				left:50%;
+				transform:translate(-50%, 0%);
+				-webkit-transform:translate(-50%, 0%);
+				-moz-transform:translate(-50%, 0%);
+				-ms-transform:translate(-50%, 0%);
+			}
+
+			@keyframes timer {
+				0% {
+					width: 200px;
+				}
+				100% {
+					width: 0px;
+				}
+			}
+		</style>
 		<script src="https://tgames.store/scripts/include.js"></script>
 		<link rel="stylesheet" href="style/rrssb.css"/>
 	</head>
@@ -54,14 +667,14 @@
 		<canvas id="canvas"></canvas>
 		<div class="pause-blur"><div></div></div>
 		<div id="overlay" class="faded overlay"></div>
-		<div id='startBtn' ></div>
+		<div id='startBtn'></div>
 		<div id="helpScreen" class='unselectable'>
 			<div id='inst_main_body'></div>
 		</div>
-		<img id="openSideBar" class='helpText' src="./images/btn_help.svg"/>
+		<img id="openSideBar" class='helpText' src="https://raw.githubusercontent.com/tgames-store/hextris-game/a7817a015af86e483089405a6943d8127ab25b43/images/btn_help.svg"/>
 		<div class="faded overlay"></div>
-		<img id="pauseBtn" src="./images/btn_pause.svg"/>
-		<img id='restartBtn' src="./images/btn_restart.svg"/>
+		<img id="pauseBtn" src="https://raw.githubusercontent.com/tgames-store/hextris-game/a7817a015af86e483089405a6943d8127ab25b43/images/btn_pause.svg"/>
+		<img id='restartBtn' src="https://raw.githubusercontent.com/tgames-store/hextris-game/a7817a015af86e483089405a6943d8127ab25b43/images/btn_restart.svg"/>
 		<div id='HIGHSCORE'>HIGH SCORE</div>
 		<div id='highScoreInGameText'>
 			<div id='highScoreInGameTextHeader'>HIGH SCORE</div><div id='currentHighScore'>10292</div>
@@ -76,7 +689,7 @@
 				<div class='score'><span class='scoreNum'>3.</span> <div id="3place" style="display:inline;">0</div></div>
 			</div>
 			<div id='bottomContainer'>
-				<img id='restart' src='./images/btn_restart.svg' height='57px'>
+				<img id='restart' src='https://raw.githubusercontent.com/tgames-store/hextris-game/a7817a015af86e483089405a6943d8127ab25b43/images/btn_restart.svg' height='57px'>
 				<div id='socialShare'>
 					<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 					<svg width="224.6377px" height="57px"  viewBox="0 0 255 65" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -148,6 +761,6 @@
 				</svg>
 			</div>
 		</div>
-		<script type="text/javascript" src='vendor/rrssb.min.js'></script>
+<!--		<script type="text/javascript" src='vendor/rrssb.min.js'></script>-->
 	</body>
 </html>

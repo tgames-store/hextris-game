@@ -1,3 +1,8 @@
+// function toggleDevTools() {};
+// let scaleCanvas = () => {};
+// let setStartScreen = () => {};
+// let showHelp = () => {};
+
 $(document).ready(function() {
 	initialize();
 });

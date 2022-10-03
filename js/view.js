@@ -1,3 +1,6 @@
+let btn_image = 'https://raw.githubusercontent.com/tgames-store/hextris-game/a7817a015af86e483089405a6943d8127ab25b43/images/btn_pause.svg'
+let btn_resume = 'https://raw.githubusercontent.com/tgames-store/hextris-game/a7817a015af86e483089405a6943d8127ab25b43/images/btn_resume.svg';
+
 // t: current time, b: begInnIng value, c: change In value, d: duration
 function easeOutCubic(t, b, c, d) {
 	return c * ((t = t / d - 1) * t * t + 1) + b;
@@ -45,12 +48,12 @@ function drawScoreboard() {
     var fontSize = settings.platform == 'mobile' ? 35 : 30;
     var h = trueCanvas.height / 2 + gdy + 100 * settings.scale;
 	if (gameState === 0) {
-		renderText(trueCanvas.width / 2 + gdx + 6 * settings.scale, trueCanvas.height / 2 + gdy, 60, "rgb(236, 240, 241)", String.fromCharCode("0xf04b"), 'px FontAwesome');
+		renderText(trueCanvas.width / 2 + gdx + 6 * settings.scale, trueCanvas.height / 2 + gdy, 60, "rgb(236, 240, 241)", String.fromCharCode("0xF074"), 'px FontAwesome');
 		renderText(trueCanvas.width / 2 + gdx + 6 * settings.scale, trueCanvas.height / 2.1 + gdy - 155 * settings.scale, 150, "#2c3e50", "Hextris");
 		renderText(trueCanvas.width / 2 + gdx + 5 * settings.scale, h + 10, fontSize, "rgb(44,62,80)", 'Play!');
 	} else if (gameState != 0 && textOpacity > 0) {
 		textOpacity -= 0.05;
-		renderText(trueCanvas.width / 2 + gdx + 6 * settings.scale, trueCanvas.height / 2 + gdy, 60, "rgb(236, 240, 241)", String.fromCharCode("0xf04b"), 'px FontAwesome');
+		renderText(trueCanvas.width / 2 + gdx + 6 * settings.scale, trueCanvas.height / 2 + gdy, 60, "rgb(236, 240, 241)", String.fromCharCode("0xF074"), 'px FontAwesome');
 		renderText(trueCanvas.width / 2 + gdx + 6 * settings.scale, trueCanvas.height / 2 + gdy - 155 * settings.scale, 150, "#2c3e50", "Hextris");
 		renderText(trueCanvas.width / 2 + gdx + 5 * settings.scale, h, fontSize, "rgb(44,62,80)", 'Play!');
 		ctx.globalAlpha = scoreOpacity;
@@ -134,9 +137,9 @@ function setMainMenu() {
 	}, 500);
 	$('#restartBtn').hide();
 	if ($("#pauseBtn").replace(/^.*[\\\/]/, '') == "btn_pause.svg") {
-		$("#pauseBtn").attr("src","./images/btn_resume.svg");
+		$("#pauseBtn").attr("src", btn_resume);
 	} else {
-		$("#pauseBtn").attr("src","./images/btn_pause.svg");
+		$("#pauseBtn").attr("src", btn_image);
 	}
 }
 
@@ -230,7 +233,7 @@ function pause(o) {
 			$('#helpScreen').fadeOut(300, "linear");
 		}
 
-		$("#pauseBtn").attr("src", "./images/btn_pause.svg");
+		$("#pauseBtn").attr("src", btn_image);
 		$('.helpText').fadeOut(300, 'linear');
 		$('#overlay').fadeOut(300, 'linear');
 		$('.pause-blur').css("opacity", "0")
@@ -248,7 +251,7 @@ function pause(o) {
 			showText(message);
 		}
 		$('#fork-ribbon').fadeIn(300, 'linear');
-		$("#pauseBtn").attr("src","./images/btn_resume.svg");
+		$("#pauseBtn").attr("src", btn_resume);
 		$('#overlay').fadeIn(300, 'linear');
 		$('.pause-blur').css("opacity", "1")
 		prevGameState = gameState;

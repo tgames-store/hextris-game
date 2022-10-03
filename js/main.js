@@ -1,4 +1,6 @@
 let adsCounter = 3;
+let gameState, infobuttonfading, tweetblock, MainHex, comboTime, waveone;
+// let btn_image = 'https://raw.githubusercontent.com/tgames-store/hextris-game/a7817a015af86e483089405a6943d8127ab25b43/images/btn_pause.svg'
 
 function scaleCanvas() {
 	canvas.width = $(window).width();
@@ -129,6 +131,8 @@ function hideUIElements() {
 function skipAds(e = null) {
 	e && e.stopPropagation();
 
+	clearTimeout(settings.timer);
+
 	$("#continuescreen").fadeOut();
 	$("#buttonCont").fadeOut();
 	$("#container").fadeOut();
@@ -172,7 +176,7 @@ function handleContinue(e) {
 function init(b) {
 	if(settings.ending_block && b == 1){return;}
 	if (b) {
-		$("#pauseBtn").attr('src',"./images/btn_pause.svg");
+		$("#pauseBtn").attr('src',btn_image);
 		if ($('#helpScreen').is(":visible")) {
 			$('#helpScreen').fadeOut(150, "linear");
 		}
@@ -193,7 +197,7 @@ function init(b) {
 		$("#currentHighScore").text(highscores[0])
 	}
 	infobuttonfading = true;
-	$("#pauseBtn").attr('src',"./images/btn_pause.svg");
+	$("#pauseBtn").attr('src',btn_image);
 	hideUIElements();
 	var saveState = localStorage.getItem("saveState") || "{}";
 	saveState = JSONfn.parse(saveState);
@@ -458,13 +462,13 @@ function checkGameOver() {
 }
 
 function showHelp() {
-	if ($('#openSideBar').attr('src') == './images/btn_back.svg') {
-		$('#openSideBar').attr('src', './images/btn_help.svg');
+	if ($('#openSideBar').attr('src') == 'https://raw.githubusercontent.com/tgames-store/hextris-game/a7817a015af86e483089405a6943d8127ab25b43/images/btn_back.svg') {
+		$('#openSideBar').attr('src', 'https://raw.githubusercontent.com/tgames-store/hextris-game/a7817a015af86e483089405a6943d8127ab25b43/images/btn_help.svg');
 		if (gameState != 0 && gameState != -1 && gameState != 2) {
 			$('#fork-ribbon').fadeOut(150, 'linear');
 		}
 	} else {
-		$('#openSideBar').attr('src', './images/btn_back.svg');
+		$('#openSideBar').attr('src', 'https://raw.githubusercontent.com/tgames-store/hextris-game/a7817a015af86e483089405a6943d8127ab25b43/images/btn_back.svg');
 		if (gameState == 0 && gameState == -1 && gameState == 2) {
 			$('#fork-ribbon').fadeIn(150, 'linear');
 		}
@@ -475,7 +479,7 @@ function showHelp() {
 		pause();
 	}
 
-	if($("#pauseBtn").attr('src') == "./images/btn_pause.svg" && gameState != 0 && !infobuttonfading) {
+	if($("#pauseBtn").attr('src') == btn_image && gameState != 0 && !infobuttonfading) {
 		return;
 	}
 
